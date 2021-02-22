@@ -1,0 +1,37 @@
+body {
+    margin: 5%;
+    text-align: left;
+    padding-left: 2%;
+    font-family: sans-serif;
+    background-color: lightgoldenrodyellow;
+}
+aside {
+    width: 25%;
+    float: left;
+    background-color: darkgoldenrod;
+    padding-left: 2%;
+}
+#vytvor {
+    width: 20%;
+    float: right;
+    margin-right: 40%;
+    padding: 2%;
+}
+#tlacitka {
+    margin-left: 20%;
+}
+#vytvor {
+    background-color: #CCCCCC;
+    border: 1px solid darkkhaki;
+}
+#vys {
+    background-color: #FF9999;
+    padding: 5%;
+}
+#vyklad {
+    width: 60%;
+    float: right;
+    margin-right: 5%;
+    padding: 2%;
+    font-style: italic;
+}

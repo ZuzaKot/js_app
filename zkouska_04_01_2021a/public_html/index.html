@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+Zkouška z B_TWS dne 4.1.2020
+
+Zadání:
+Zítřek, který nikdy neumírá...
+
+"Jaký datum byl včera?"
+-->
+<html>
+    <head>
+        <title>Zkouška z B_TWS 4.1.2020</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="vzhled.css" rel="stylesheet" type="text/css"/>
+        <script>
+            function Zobraz(){
+                if (document.getElementById("vytvor").style.display == "block") document.getElementById("vytvor").style.display = "none";
+                document.getElementById("vyklad").style.display = "block";
+            }
+            function Zobraz2(){
+                if (document.getElementById("vyklad").style.display == "block") document.getElementById("vyklad").style.display = "none";
+                document.getElementById("vytvor").style.display = "block";
+            }
+
+            function PrestupnyRok(rok)
+            {
+                if (rok % 4 !== 0) return false;
+                if (rok % 100 !== 0) return true;
+                if (rok % 400 !== 0) return false;
+                return true;
+            }
+
+            function NoveDatum(){
+                if (document.zadani.den.value == 1){
+                    if (document.zadani.mesic.value == 1){
+                        document.zadani.mesic.value = 12;
+                        document.zadani.den.value = 31;
+                        document.zadani.rok.value = document.zadani.rok.value - 1;
+                    }
+                    else {
+                        document.zadani.mesic.value = document.zadani.mesic.value - 1;
+                        if (document.zadani.mesic.value == 2)
+                        {
+                            if (PrestupnyRok(document.zadani.rok.value)) document.zadani.den.value = 29;
+                            else document.zadani.den.value = 28;
+                        }
+                        else {
+                            switch (document.zadani.mesic.value){
+                                case 4:
+                                case 6:
+                                case 9:
+                                case 11:
+                                    document.zadani.den.value = 30;
+                                    break;
+                                default:
+                                    document.zadani.den.value = 31;
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    document.zadani.den.value = document.zadani.den.value - 1;
+                }
+                document.getElementById("vysledek").innerHTML = document.zadani.den.value + ". " + document.zadani.mesic.value + ". " + document.zadani.rok.value;
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <h1 style="text-align: center; color: brown;">Zítřek nikdy neumírá</h1>
+        </div>
+        <div id="vyklad" style="display: none" onclick="style.display='none'">
+            <h2>Gregoriánský kalendář</h2>
+            <h3>zápočtová práce z B_TWS</h3>
+            <p><i>
+                Gregoriánský kalendář je juliánský kalendář s křesťanským letopočtem a korekcí přestupnosti, který je v současnosti celosvětově používaným systémem pro počítání času (kalendářem).<br>
+                Gregoriánský kalendář byl vytvořen roku 1582 papežem Řehořem XIII. z Bologna v Itálii <br>
+                Specifické je pro Gregoriánský kalendář rozdílný počet dnů v jednotlivých měsících:<br></i></p>
+            <ul>
+                <li>31, 28/29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31</li>
+                <li>přestupný rok je dělitelný 4 a není dělitelný 100, je ale dělitelný 400</li>
+            </ul>
+
+        </div>
+        <script>
+            function Dnesek(){
+                datum = new Date();
+                with(datum){
+                    d = getDate();
+                    m = getMonth()+1;
+                    if (document.all) r = getYear();
+                    else r = getYear() + 1900;
+                }
+                document.zadani.den.value = d;
+                document.zadani.mesic.value = m;
+                document.zadani.rok.value = r;
+            }
+        </script>
+        <div id="vytvor" style="display: none" ondblclick="style.display='none'">
+            <form name="zadani" onsubmit="NoveDatum(); return false;">
+                <table>
+                    <tr>
+                        <td>Den: </td>
+                        <td><input type="number" name="den" id="den" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Měsíc: </td>
+                        <td><input type="number" name="mesic" id="mesic" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Rok: </td>
+                        <td><input type="number" name="rok" id="rok" value=""></td>
+                    </tr>
+                </table>
+                <br>
+                <div id="tlacitka">
+                    <input type="submit" value="Počítej!">
+                    <input type="reset" value="Smaž!">
+                    <input type="button" value="Dnes" onclick="Dnesek()">
+                </div>
+            </form>
+            <br>
+            <div id="vys">
+                <br>
+                <i>Včerejší datum bylo:</i>
+                <br>
+                <div id="vysledek"></div>
+                <br>
+            </div>
+        </div>
+        <aside>
+            <h2>Menu</h2>
+            <hr>
+            <h3 title="Co je gregoriánský kalendář?" onclick="Zobraz()">Výklad</h3>
+            <h3 title="Propočítat včerejší datum!" onclick="Zobraz2()">Vytvoř</h3>
+        </aside>
+        <br>
+        <br>
+        <br>
+    </body>
+</html>
