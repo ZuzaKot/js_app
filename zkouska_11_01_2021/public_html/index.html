@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+Zkouška z B_TWS dne 11.1.2021
+
+Zadání: Daň z příjmů
+
+Vytvořte stránky k dani z příjmů. 
+Konkrétně framesetovou stránku, kdy v levé části bude menu, které bude ovládat obsah pravého framu. 
+V pravém framu se budou zobrazovat dvě stránky: 
+    Na jedné bude prezentace na způsob horní části této stránky, ovsem odrážky a tabulka budou jako HTML-tabulka resp. odrážky. 
+    Na druhé stránce bude skript počítající daň z příjmů. 
+Ke stanovení daně je potřeba zjistit: 
+    Hrubý příjem od zaměstnavatelů, úhrn pojistného zaplaceného zaměstnavatelem za zaměstnance (tyto sečíst), 
+    dále je třeba zjistit výši odečitatelných položek (ta se od základu daně odečte; udělejte jen jedno okénko na všechny položky). 
+Toto tedy budou celkem tři textové položky. 
+Z těchto údajů spočítáte 15 procent a pokračujete odpočtem slev na dani. 
+    Slevu na poplatníka uplatníte vždycky. 
+    Slevu na manželku zjistěte checkboxem stejně jako slevu na studium. 
+    Slevu na dítě zjistěte pomocí radiobuttonu (nebo menu -- počítejte s možností 0 - 4 dětí). 
+    Sleva na manželku a studium se buďto uplatní (částka se odečte nebo ne). 
+    Sleva na vyživované dítě se uplatní tolikrát, kolik je dětí. 
+
+Výpočet proveďte Javascriptem.
+
+
+-->
+<html lang="cs">
+    <head>
+        <title>Zkouška z B_TWS dne 11.1.2021</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="vzhled.css" rel="stylesheet" type="text/css"/>
+        <script>
+            function Zobraz(){
+                if (document.getElementById("vypocet").style.display == "block") document.getElementById("vypocet").style.display = "none";
+                document.getElementById("info").style.display = "block";
+            }
+            function Zobraz2(){
+                if (document.getElementById("info").style.display == "block") document.getElementById("info").style.display = "none";
+                document.getElementById("vypocet").style.display = "block";
+            }
+        </script>
+    </head>
+    <body>
+        <aside>
+            <h2>Menu</h2>
+            <hr>
+            <h3 title="Daň z příjmu ze závislé činnosti" onclick="Zobraz()">Info</h3>
+            <h3 title="Vypočítej!" onclick="Zobraz2()">Výpočet</h3>
+        </aside>
+        <div id="info" style="display: none">
+            <h3>Daň z příjmů fyzických osob - ze závislé činnosti</h3>
+            Daň z příjmů fyzických osob je upravena zákonem 586/1992 Sb.<br>
+            Poslední úpravy zrušily explicitní daňovou progresi, tedy daň z příjmu činí 15 % daňového základu.<br><br>
+            Daňový základ tvoří příjmy dotyčné osoby snížené zejména o:
+            <ul>
+                <li>členské příspěvky odborových organizací,</li>
+                <li>část příspěvků na penzijní připojištění & životní pojištění,</li>
+                <li>částku, kterou poplatník přispěl na výzkum a vývoj (za určitých podmínek).</li>
+            </ul>
+            <br>
+            <strong>Oproti minulé úpravě jsou předmětem daně i příspěvky na zdravotní pojištění a sociální zabezpečení hrazené zaměstnavatelem za zaměstnance!</strong>
+            <br>
+            Od daně si lze odečíst slevy na dani, které jsou například tyto:<br>
+            <pre>
+            +------------------------------------+--------+
+            | Položka                            | částka |
+            |------------------------------------|--------|
+            | Na poplatníka                      | 24 840 |
+            | Na manžela (manželku) v domácnosti | 24 840 |
+            | Na studium                         |  4 020 |
+            | Na dítě                            | 11 604 |
+            +------------------------------------+--------+ 
+            </pre>
+        </div>
+        <div id="vypocet" style="display: none">
+            <h3>Kalkulačka daně ze závislé činnosti</h3>
+            <form name="zadani" onsubmit="ZakladDane(); return false;">
+            <table>
+                <tr>
+                    <td>Hrubá mzda: </td>
+                    <td><input type="number" name="hruba_mzda"></td>
+                </tr>
+                <tr>
+                    <td title="Hrazeno zaměstnavatelem">Sociální a zdravotní pojištění: </td>
+                    <td><input type="number" name="pojistne"></td>
+                </tr>
+                <tr>
+                    <td title="...zeptejte se své účetní">Odečitatelné položky: </td>
+                    <td><input type="number" name="odecitatelne"></td>
+                </tr>
+                <tr>
+                    <td rowspan="4">Slevy na dani: </td>
+                    <td><input type="checkbox" title="Sleva na poplatníka" name="sl_popl" checked="checked" disabled="disabled" value="24840">Sleva na poplatníka</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="sl_man" id="sl_man" title="Na manžela v domácnosti" value="0" onchange="value='24840'">Na manžela v domácnosti</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="sl_stud" id="sl_stud" title="Na studium" value="0" onchange="value='4020'">Na studium</td>
+                </tr>
+                <tr>
+                    <td><input type="radio" name="sl_deti" value="0">Bez dětí 
+                        <input type="radio" name="sl_deti" value="11604">1 dítě 
+                        <input type="radio" name="sl_deti" value="23208">2 děti 
+                        <input type="radio" name="sl_deti" value="34812">3 děti 
+                    </td>
+                </tr>
+                <tr>
+                    <td>Základ daně: </td>
+                    <td><div id="zaklD"></div></td>
+                </tr>
+                <tr>
+                    <td>15% ze základu daně: </td>
+                    <td><div id="15zaklD"></div></td>
+                </tr>
+                <tr>
+                    <td>Daň: </td>
+                    <td><div id="vyslD"></div></td>
+                </tr>
+            </table>
+                <input type="submit" name="potvrzTlc" value="Počítej!">
+            </form>
+            <script>
+                function KontrolaUplnosti(){
+                    if (document.zadani.hruba_mzda.value == "") alert("Musíte vyplnit výši hrubé mzdy!");
+                    else if (document.zadani.pojistne.value == "") alert("Musíte vyplnit výši pojistného!");
+                    else if (document.zadani.odecitatelne.value == "") alert("Musíte vyplnit výši odečitatelných položek!");
+                    else return false;
+                }
+                function Zmena(){
+                    if(document.zadani.sl_man.value == "0")
+                        document.getElementById("sl_man").value = "24840";
+                    if(document.zadani.sl_man.value == "24840")
+                        document.getElementById("sl_man").value = "0";
+                }
+                function Zmena2(){
+                    if(document.zadani.sl_stud.value == "0")
+                        document.getElementById("sl_stud").value = "4020";
+                    if(document.zadani.sl_stud.value == "4020")
+                        document.getElementById("sl_stud").value = "0";
+                }
+                
+                function ZakladDane(){
+                    KontrolaUplnosti();
+                    var zd = (document.zadani.hruba_mzda.value)*1 + (document.zadani.pojistne.value)*1 - (document.zadani.odecitatelne.value)*1;
+                    document.getElementById("zaklD").innerHTML = zd;
+                    var zd15 = (zd/100)*15;
+                    document.getElementById("15zaklD").innerHTML = zd15 + ",- Kč";
+                    
+                    
+                    
+                    var vysledek = zd15*1 - (document.zadani.sl_popl.value)*1 - (document.zadani.sl_deti.value)*1 - (document.zadani.sl_man.value)*1 - (document.zadani.sl_stud.value)*1;
+                    document.getElementById("vyslD").innerHTML = vysledek + ",- Kč";
+                }
+            </script>
+        </div>
+    </body>
+</html>
